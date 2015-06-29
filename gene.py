@@ -56,7 +56,7 @@ def peek_gene(gene_str):
         if char:
             result += char
         else:
-            result += " n/a "
+            result += ' '
             flg = False
 
     return (result, flg)
@@ -81,7 +81,7 @@ def validate_gene(gene_str):
 
     return True
 
-def evaluate(gene_str, v=False):
+def evaluate_old_unused(gene_str, v=False):
     if v:
         print "Gene Looks like: %s" % peek_gene(gene_str)[0]
 
@@ -90,3 +90,31 @@ def evaluate(gene_str, v=False):
             print "Valid Gene! Calculating..."
 
         return eval(gene_str)
+
+def evaluate(gene_str, v=False):
+    OPERATOR = list("*/-+")
+    NUMBER = list("0123456789")
+
+    gene_str = list(peek_gene(gene_str)[0])
+    tggl = True
+
+    final = ""
+    for n in range(0, len(gene_str)):
+        if tggl:
+            if gene_str[n] in NUMBER:
+                final += gene_str[n]
+                tggl = False
+
+        else:
+            if gene_str[n] in OPERATOR:
+                final += gene_str[n]
+                tggl = True
+
+    if len(final) > 0 and list(final)[-1] in OPERATOR:
+        final = final[:-1]
+
+    if v:
+        print "Equation: %s" % final
+        print "Evaluates to: %d" % eval(final)
+
+    return final
