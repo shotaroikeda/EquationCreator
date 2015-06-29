@@ -81,6 +81,12 @@ def validate_gene(gene_str):
 
     return True
 
-def evaluate(gene_str):
+def evaluate(gene_str, v=False):
+    if v:
+        print "Gene Looks like: %s" % peek_gene(gene_str)[0]
+
     if validate_gene(gene_str):
+        if v:
+            print "Valid Gene! Calculating..."
+
         return eval(gene_str)
