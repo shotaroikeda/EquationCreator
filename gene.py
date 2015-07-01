@@ -115,6 +115,10 @@ def evaluate(gene_str, v=False):
 
     if v:
         print "Equation: %s" % final
-        print "Evaluates to: %d" % eval(final)
 
-    return final
+    try:
+        if v:
+            print "Evaluates to: %d" % eval(final)
+        return int(eval(final))
+    except ZeroDivisionError:
+        return -1000
