@@ -5,6 +5,7 @@
 
 
 import random
+import numpy as np
 
 _GENE_ENCODING_DICT = {
     "0000" : '0',
@@ -49,7 +50,7 @@ def peek_gene(gene_str):
     for n in range(0, len(gene_str) / _GENE_LENGTH):
         if n is 0:
             continue
-        
+
         char = _GENE_ENCODING_DICT.get(
             gene_str[(n-1) * _GENE_LENGTH : n * _GENE_LENGTH])
 
@@ -122,3 +123,54 @@ def evaluate(gene_str, v=False):
         return int(eval(final))
     except ZeroDivisionError:
         return -1000
+
+def reproduce(gene1, gene2, split_num, rmut=0.0001, v=False):
+    if v:
+        print "Reproducing: "
+        print "Gene 1: %s" % (gene1)
+        print "Gene 2: %s" % (gene2)
+        print "Splitting at %d" % (split_num)
+
+    temp = gene1[:split_num] + gene2[split_num:]
+    gene2 = gene2[:split_num] + gene1[split_num:]
+    gene1 = temp
+
+    if v:
+        print "Applying Mutation..."
+
+    g1a = list(gene1)
+    g2a = list(gene2)
+
+    mut = np.vectorize(flip)
+
+    gene1 = ''.join(mut(g1a, rmut))
+    gene2 = ''.join(mut(g2a, rmut))
+
+    if v:
+        print "After:"
+        print "Gene 1: %s" % (gene1)
+        print "Gene 2: %s" % (gene2)
+
+    return (gene1, gene2)
+
+def nproll(double):
+    """
+    Rolls True or False with the number given.
+    The number given is the probability this function
+    will return True.
+    """
+    tf = [True, False]
+    pt = [double, 1-double]
+    return np.random.choice(tf, p=pt)
+
+def flip(char, rmut):
+    if nproll(rmut):
+        if char is '0':
+            return '1'
+        else:
+            return '0'
+
+    return char
+
+g1 = generate()
+g2 = generate()
