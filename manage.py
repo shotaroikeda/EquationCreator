@@ -2,8 +2,6 @@ import gene
 import numpy as np
 
 
-CHANCE_UNFIT = 0.0000001  # The default fitness a completely bad gene has
-
 def initialize():
     return [gene.generate() for i in range(0, 20)]
 
