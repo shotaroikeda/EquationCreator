@@ -124,16 +124,42 @@ def evaluate(gene_str, v=False):
     except ZeroDivisionError:
         return -1000
 
-def reproduce(gene1, gene2, split_num, rmut=0.0001, v=False):
-    if v:
-        print "Reproducing: "
-        print "Gene 1: %s" % (gene1)
-        print "Gene 2: %s" % (gene2)
-        print "Splitting at %d" % (split_num)
+def show_eq(gene_str):
+    OPERATOR = list("*/-+")
+    NUMBER = list("0123456789")
 
-    temp = gene1[:split_num] + gene2[split_num:]
-    gene2 = gene2[:split_num] + gene1[split_num:]
-    gene1 = temp
+    gene_str = list(peek_gene(gene_str)[0])
+    tggl = True
+
+    final = ""
+    for n in range(0, len(gene_str)):
+        if tggl:
+            if gene_str[n] in NUMBER:
+                final += gene_str[n]
+                tggl = False
+
+        else:
+            if gene_str[n] in OPERATOR:
+                final += gene_str[n]
+                tggl = True
+
+    if len(final) > 0 and list(final)[-1] in OPERATOR:
+        final = final[:-1]
+
+    return final
+
+def reproduce(gene1, gene2, split_num, rrep=0.7, rmut=0.0001, v=False):
+
+    if nproll(rrep):
+        if v:
+            print "Reproducing: "
+            print "Gene 1: %s" % (gene1)
+            print "Gene 2: %s" % (gene2)
+            print "Splitting at %d" % (split_num)
+
+        temp = gene1[:split_num] + gene2[split_num:]
+        gene2 = gene2[:split_num] + gene1[split_num:]
+        gene1 = temp
 
     if v:
         print "Applying Mutation..."
