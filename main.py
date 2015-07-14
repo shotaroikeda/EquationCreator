@@ -15,7 +15,7 @@ FILE_OUT = "output.txt"
 # the args on launch 
 MUTATION_RATE = 0.15
 REPRODUCTION_RATE = 0.7
-# MAX_GENE_POOL is set in manage.py <- bad design...
+MAX_GENE_POOL = 50
 
 argv.pop(0)
 
@@ -40,6 +40,16 @@ for index, arg in enumerate(argv):
         except ValueError:
             print "No valid Reproduction Rate, proceeding with default...(%10.5f)" % (
                 REPRODUCTION_RATE)
+    elif arg == '-N':
+        try:
+            ng = int(argv[index+1])
+            if ng <= 0:
+                raise ValueError('Max gene pool cannot be less than or equal to 0.')
+
+            MAX_GENE_POOL = ng
+        except ValueError:
+            print 'Max gene pool cannot be less than or equal to 0.'
+
     elif arg == '--help' or arg == '-h':
         print "EquationCreator %s:" % (P_VERSION)
         print "Creates an equation which equates to a given number."
@@ -50,6 +60,8 @@ for index, arg in enumerate(argv):
         print "\t-M: Set the Mutation Rate. Default is %0.5f" % (MUTATION_RATE)
         print "\t-R: Set the Reproduction Rate. Default is %0.5f" % (
             REPRODUCTION_RATE)
+        print "\t-N: Set the Max number of genes that can exist at once. Default is %10d." % (
+            MAX_GENE_POOL)
         exit()
 
 FINAL_NUMBER = 42
@@ -101,8 +113,8 @@ while not gene_pool[-1][1] == 1:
 
     # Reproduce 2 genes and add the resulting ones to the list of genes
     ng1, ng2 = manage.reproduce(gene_pool, REPRODUCTION_RATE, MUTATION_RATE)
-    manage.add(gene_pool, ng1, FINAL_NUMBER)
-    manage.add(gene_pool, ng2, FINAL_NUMBER)
+    manage.add(gene_pool, ng1, FINAL_NUMBER, MAX_GENE_POOL)
+    manage.add(gene_pool, ng2, FINAL_NUMBER, MAX_GENE_POOL)
 
     generation += 1
     prev_gene = gene_pool[-1][1]
