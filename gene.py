@@ -7,6 +7,7 @@
 import random
 import numpy as np
 
+# Dictionary to decode genes
 _GENE_ENCODING_DICT = {
     "0000" : '0',
     "0001" : '1',
@@ -82,17 +83,8 @@ def validate_gene(gene_str):
 
     return True
 
-def evaluate_old_unused(gene_str, v=False):
-    if v:
-        print "Gene Looks like: %s" % peek_gene(gene_str)[0]
-
-    if validate_gene(gene_str):
-        if v:
-            print "Valid Gene! Calculating..."
-
-        return eval(gene_str)
-
 def evaluate(gene_str, v=False):
+    """Evaluates what the gene equates to"""
     OPERATOR = list("*/-+")
     NUMBER = list("0123456789")
 
@@ -100,6 +92,8 @@ def evaluate(gene_str, v=False):
     tggl = True
 
     final = ""
+    # Make sure it's solvable by alternating between checkinf for a number or
+    # an operator
     for n in range(0, len(gene_str)):
         if tggl:
             if gene_str[n] in NUMBER:
@@ -121,6 +115,7 @@ def evaluate(gene_str, v=False):
         if v:
             print "Evaluates to: %d" % eval(final)
         return int(eval(final))
+    # Bad equations automatically have a bad fitness
     except ZeroDivisionError:
         return -1000
 
@@ -143,12 +138,14 @@ def show_eq(gene_str):
                 final += gene_str[n]
                 tggl = True
 
+    # if the last char is an operator
     if len(final) > 0 and list(final)[-1] in OPERATOR:
         final = final[:-1]
 
     return final
 
 def reproduce(gene1, gene2, split_num, rrep=0.7, rmut=0.0001, v=False):
+    """Reproduces a given genes."""
 
     if nproll(rrep):
         if v:
@@ -190,6 +187,7 @@ def nproll(double):
     return np.random.choice(tf, p=pt)
 
 def flip(char, rmut):
+    """Mutates a character if nproll is true."""
     if nproll(rmut):
         if char is '0':
             return '1'
@@ -197,6 +195,3 @@ def flip(char, rmut):
             return '0'
 
     return char
-
-g1 = generate()
-g2 = generate()
