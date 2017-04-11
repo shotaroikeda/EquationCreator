@@ -36,6 +36,14 @@ def create_initial_population():
     """Creates a randomly generated group of genes."""
     return [gene.generate() for i in range(0, 20)]
 
+def initial_scan(gene_pool):
+    """See if the gene pool already has a solution"""
+    for _, scores in gene_pool:
+        if scores == 1:
+            return True
+
+    return False
+
 def generate_fitness(gene_array, initial_num=42):
     """Generates a list of fitnesses for a given array of genes."""
     return [float((0.00001 / (0.00001 +
